@@ -1,0 +1,171 @@
+### Configuração da API
+@baseUrl = https://localhost:5001
+@apiUrl = {{baseUrl}}/api/usuarios
+
+### Variável para armazenar ID do usuário
+@usuarioId = 
+
+###############################################
+# CRUD DE USUÁRIOS
+###############################################
+
+### 1. Criar Novo Usuário
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "nome": "Maria Silva",
+  "email": "maria.silva@email.com",
+  "senha": "Senha@123",
+  "dataNascimento": "1990-05-15",
+  "telefone": "(11) 98765-4321",
+  "cidade": "São Paulo",
+  "estado": "SP"
+}
+
+### 2. Listar Todos os Usuários
+GET {{apiUrl}}
+
+### 3. Buscar Usuário por ID
+# Substitua {id} pelo ID retornado na criação
+GET {{apiUrl}}/{{usuarioId}}
+
+### 4. Buscar Usuário por Email
+GET {{apiUrl}}/email/maria.silva@email.com
+
+### 5. Atualizar Dados do Usuário
+PUT {{apiUrl}}/{{usuarioId}}
+Content-Type: application/json
+
+{
+  "nome": "Maria Silva Santos",
+  "email": "maria.silva@email.com",
+  "dataNascimento": "1990-05-15",
+  "telefone": "(11) 98765-4321",
+  "cidade": "São Paulo",
+  "estado": "SP"
+}
+
+### 6. Atualizar Senha
+PUT {{apiUrl}}/{{usuarioId}}/senha
+Content-Type: application/json
+
+{
+  "senhaAtual": "Senha@123",
+  "novaSenha": "NovaSenha@456"
+}
+
+### 7. Atualizar Dados de Saúde
+PUT {{apiUrl}}/{{usuarioId}}/dados-saude
+Content-Type: application/json
+
+{
+  "peso": 65.5,
+  "altura": 165,
+  "tipoSanguineo": "A+",
+  "faseVida": "Fase Adulta"
+}
+
+### 8. Deletar Usuário
+DELETE {{apiUrl}}/{{usuarioId}}
+
+###############################################
+# EXEMPLOS DE TESTES
+###############################################
+
+### Criar Usuário - Tentante
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "nome": "Ana Paula Costa",
+  "email": "ana.costa@email.com",
+  "senha": "Senha@123",
+  "dataNascimento": "1988-03-20",
+  "telefone": "(21) 99876-5432",
+  "cidade": "Rio de Janeiro",
+  "estado": "RJ"
+}
+
+### Atualizar Dados de Saúde - Gestação
+PUT {{apiUrl}}/{{usuarioId}}/dados-saude
+Content-Type: application/json
+
+{
+  "peso": 70.0,
+  "altura": 168,
+  "tipoSanguineo": "O+",
+  "faseVida": "Gestação e Pós-parto"
+}
+
+### Criar Usuário - Adolescência
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "nome": "Julia Santos",
+  "email": "julia.santos@email.com",
+  "senha": "Senha@123",
+  "dataNascimento": "2008-07-10",
+  "telefone": "(11) 94567-8901",
+  "cidade": "Campinas",
+  "estado": "SP"
+}
+
+### Atualizar Dados de Saúde - Adolescência
+PUT {{apiUrl}}/{{usuarioId}}/dados-saude
+Content-Type: application/json
+
+{
+  "peso": 55.0,
+  "altura": 160,
+  "tipoSanguineo": "B+",
+  "faseVida": "Adolescência"
+}
+
+###############################################
+# TESTES DE VALIDAÇÃO (Devem retornar erro)
+###############################################
+
+### Email duplicado (deve retornar 400)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "nome": "Teste Duplicado",
+  "email": "maria.silva@email.com",
+  "senha": "Senha@123"
+}
+
+### Email inválido (deve retornar 400)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "nome": "Teste Email",
+  "email": "email-invalido",
+  "senha": "Senha@123"
+}
+
+### Estado inválido (deve retornar 400)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "nome": "Teste Estado",
+  "email": "teste.estado@email.com",
+  "senha": "Senha@123",
+  "estado": "ABC"
+}
+
+### Senha atual incorreta (deve retornar 400)
+PUT {{apiUrl}}/{{usuarioId}}/senha
+Content-Type: application/json
+
+{
+  "senhaAtual": "SenhaErrada",
+  "novaSenha": "NovaSenha@789"
+}
+
+### Buscar usuário inexistente (deve retornar 404)
+GET {{apiUrl}}/00000000-0000-0000-0000-000000000000
