@@ -123,6 +123,26 @@ CREATE TABLE dica_dia (
 );
 
 -- ============================================================
+-- 8. REGISTRO DE CICLO (HISTÓRICO DE PERÍODOS)
+-- Cada registro representa um período menstrual completo
+-- (início e término), permitindo múltiplos por usuário.
+-- Usado para: visualização no calendário, cálculo de previsão
+-- do próximo ciclo baseado na média dos ciclos anteriores.
+-- ============================================================
+CREATE TABLE ciclo_registro (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    usuario_id      UUID NOT NULL REFERENCES usuario(id) ON DELETE CASCADE,
+    data_inicio     DATE NOT NULL,
+    data_fim        DATE,                -- NULL se o ciclo ainda está em andamento
+    duracao_ciclo   INT,                 -- dias entre este início e o próximo (calculado ao fechar)
+    observacoes     TEXT,
+    criado_em       TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    atualizado_em   TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE INDEX idx_ciclo_registro_usuario ON ciclo_registro(usuario_id, data_inicio DESC);
+
+-- ============================================================
 -- ÍNDICES (consultas mais comuns do app)
 -- ============================================================
 CREATE INDEX idx_registro_diario_usuario_data ON registro_diario(usuario_id, data_registro);

@@ -11,6 +11,8 @@ namespace ApiSaudeFeminina.Application
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IArtigoService, ArtigoService>();
+            services.AddScoped<ICicloService, CicloService>();
+            services.AddScoped<ICicloRegistroService, CicloRegistroService>();
             return services;
         }
     }
