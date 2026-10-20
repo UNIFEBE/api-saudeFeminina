@@ -66,6 +66,17 @@ namespace ApiSaudeFeminina.Infrastructure.Configurations
                 .HasColumnName("fase_vida")
                 .HasMaxLength(50);
 
+            builder.Property(u => u.UsaAnticoncepcional)
+                .HasColumnName("usa_anticoncepcional");
+
+            builder.Property(u => u.DesejaEngravidar)
+                .HasColumnName("deseja_engravidar")
+                .HasColumnType("smallint");
+
+            builder.Property(u => u.Objetivo)
+                .HasColumnName("objetivo")
+                .HasColumnType("smallint");
+
             builder.Property(u => u.CreatedAt)
                 .HasColumnName("criado_em")
                 .HasColumnType("timestamp with time zone")

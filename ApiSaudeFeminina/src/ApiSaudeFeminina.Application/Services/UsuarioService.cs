@@ -52,7 +52,12 @@ namespace ApiSaudeFeminina.Application.Services
                 dto.DataNascimento,
                 dto.Telefone,
                 dto.Cidade,
-                dto.Estado);
+                dto.Estado,
+                dto.Peso,
+                dto.Altura,
+                dto.UsaAnticoncepcional,
+                dto.DesejaEngravidar,
+                dto.Objetivo);
 
             await _repository.AddAsync(usuario);
             await _repository.SaveChangesAsync();
@@ -75,7 +80,10 @@ namespace ApiSaudeFeminina.Application.Services
                 dto.DataNascimento,
                 dto.Telefone,
                 dto.Cidade,
-                dto.Estado);
+                dto.Estado,
+                dto.UsaAnticoncepcional,
+                dto.DesejaEngravidar,
+                dto.Objetivo);
 
             _repository.Update(usuario);
             await _repository.SaveChangesAsync();
@@ -161,6 +169,9 @@ namespace ApiSaudeFeminina.Application.Services
                 Altura = usuario.Altura,
                 TipoSanguineo = usuario.TipoSanguineo,
                 FaseVida = usuario.FaseVida,
+                UsaAnticoncepcional = usuario.UsaAnticoncepcional,
+                DesejaEngravidar = usuario.DesejaEngravidar,
+                Objetivo = usuario.Objetivo,
                 CreatedAt = usuario.CreatedAt,
                 UpdatedAt = usuario.UpdatedAt
             };

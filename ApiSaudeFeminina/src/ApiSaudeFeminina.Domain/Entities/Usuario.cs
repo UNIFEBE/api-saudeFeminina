@@ -13,6 +13,9 @@ namespace ApiSaudeFeminina.Domain.Entities
         public decimal? Altura { get; private set; }
         public string? TipoSanguineo { get; private set; }
         public string? FaseVida { get; private set; }
+        public bool? UsaAnticoncepcional { get; private set; }
+        public int? DesejaEngravidar { get; private set; }   // 0=Não 1=Sim 2=Talvez
+        public int? Objetivo { get; private set; }            // 1=MonitorarCiclo 2=Engravidar 3=EvitarGravidez 4=AcompanharSintomas
 
         protected Usuario() { }
 
@@ -23,7 +26,12 @@ namespace ApiSaudeFeminina.Domain.Entities
             DateTime? dataNascimento = null,
             string? telefone = null,
             string? cidade = null,
-            string? estado = null)
+            string? estado = null,
+            decimal? peso = null,
+            decimal? altura = null,
+            bool? usaAnticoncepcional = null,
+            int? desejaEngravidar = null,
+            int? objetivo = null)
         {
             SetNome(nome);
             SetEmail(email);
@@ -32,6 +40,19 @@ namespace ApiSaudeFeminina.Domain.Entities
             Telefone = telefone;
             Cidade = cidade;
             SetEstado(estado);
+
+            if (peso.HasValue && peso.Value < 0)
+                throw new ArgumentException("O peso não pode ser negativo.");
+
+            if (altura.HasValue && altura.Value < 0)
+                throw new ArgumentException("A altura não pode ser negativa.");
+
+            Peso = peso;
+            Altura = altura;
+
+            SetDesejaEngravidar(desejaEngravidar);
+            SetObjetivo(objetivo);
+            UsaAnticoncepcional = usaAnticoncepcional;
         }
 
         public void SetNome(string nome)
@@ -75,13 +96,32 @@ namespace ApiSaudeFeminina.Domain.Entities
             Estado = estado?.ToUpper();
         }
 
+        public void SetDesejaEngravidar(int? valor)
+        {
+            if (valor.HasValue && valor.Value is < 0 or > 2)
+                throw new ArgumentException("DesejaEngravidar deve ser 0 (Não), 1 (Sim) ou 2 (Talvez).");
+
+            DesejaEngravidar = valor;
+        }
+
+        public void SetObjetivo(int? valor)
+        {
+            if (valor.HasValue && valor.Value is < 1 or > 4)
+                throw new ArgumentException("Objetivo deve ser 1 (Monitorar ciclo), 2 (Engravidar), 3 (Evitar gravidez) ou 4 (Acompanhar sintomas).");
+
+            Objetivo = valor;
+        }
+
         public void Update(
             string nome,
             string email,
             DateTime? dataNascimento,
             string? telefone,
             string? cidade,
-            string? estado)
+            string? estado,
+            bool? usaAnticoncepcional,
+            int? desejaEngravidar,
+            int? objetivo)
         {
             SetNome(nome);
             SetEmail(email);
@@ -89,6 +129,9 @@ namespace ApiSaudeFeminina.Domain.Entities
             Telefone = telefone;
             Cidade = cidade;
             SetEstado(estado);
+            UsaAnticoncepcional = usaAnticoncepcional;
+            SetDesejaEngravidar(desejaEngravidar);
+            SetObjetivo(objetivo);
             MarkAsUpdated();
         }
 
