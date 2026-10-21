@@ -23,6 +23,7 @@ namespace ApiSaudeFeminina.Infrastructure
             services.AddScoped<ICicloConfigRepository, CicloConfigRepository>();
             services.AddScoped<IRegistroDiarioRepository, RegistroDiarioRepository>();
             services.AddScoped<ICicloRegistroRepository, CicloRegistroRepository>();
+            services.AddScoped<IConsultaRepository, ConsultaRepository>();
 
             return services;
         }

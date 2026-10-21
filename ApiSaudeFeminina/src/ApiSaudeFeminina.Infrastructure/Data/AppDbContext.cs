@@ -14,6 +14,7 @@ namespace ApiSaudeFeminina.Infrastructure.Data
         public DbSet<CicloConfig> CicloConfigs => Set<CicloConfig>();
         public DbSet<RegistroDiario> RegistrosDiarios => Set<RegistroDiario>();
         public DbSet<CicloRegistro> CicloRegistros => Set<CicloRegistro>();
+        public DbSet<Consulta> Consultas => Set<Consulta>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

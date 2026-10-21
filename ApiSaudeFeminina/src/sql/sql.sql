@@ -148,3 +148,33 @@ CREATE INDEX idx_ciclo_registro_usuario ON ciclo_registro(usuario_id, data_inici
 CREATE INDEX idx_registro_diario_usuario_data ON registro_diario(usuario_id, data_registro);
 CREATE INDEX idx_consulta_usuario             ON consulta(usuario_id);
 CREATE INDEX idx_artigo_categoria             ON artigo(categoria_id);
+
+-- ============================================================
+-- MIGRAÇÃO: Adicionar campos de perfil ao cadastro do usuário
+-- Tabela: public.usuario
+-- ============================================================
+
+-- usa_anticoncepcional
+-- NULL = não informado, TRUE = sim, FALSE = não
+ALTER TABLE public.usuario
+    ADD COLUMN IF NOT EXISTS usa_anticoncepcional BOOLEAN;
+
+-- deseja_engravidar (domínio numérico)
+-- 0 = Não  |  1 = Sim  |  2 = Talvez  |  NULL = não informado
+ALTER TABLE public.usuario
+    ADD COLUMN IF NOT EXISTS deseja_engravidar SMALLINT
+        CONSTRAINT chk_deseja_engravidar CHECK (deseja_engravidar IN (0, 1, 2));
+
+-- objetivo (domínio numérico)
+-- 1 = Monitorar ciclo  |  2 = Engravidar
+-- 3 = Evitar gravidez  |  4 = Acompanhar sintomas  |  NULL = não informado
+ALTER TABLE public.usuario
+    ADD COLUMN IF NOT EXISTS objetivo SMALLINT
+        CONSTRAINT chk_objetivo CHECK (objetivo IN (1, 2, 3, 4));
+
+-- ============================================================
+-- MIGRAÇÃO: Adicionar coluna atualizado_em na tabela consulta
+-- A tabela foi criada originalmente sem esta coluna.
+-- ============================================================
+ALTER TABLE public.consulta
+    ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMP WITH TIME ZONE;
