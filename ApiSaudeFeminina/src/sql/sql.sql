@@ -178,3 +178,22 @@ ALTER TABLE public.usuario
 -- ============================================================
 ALTER TABLE public.consulta
     ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMP WITH TIME ZONE;
+
+-- ============================================================
+-- MIGRAÇÃO: Recalcular duracao_ciclo nos registros existentes
+-- Para cada registro, calcula a diferença em dias até o próximo
+-- registro do mesmo usuário (ordenado por data_inicio ASC).
+-- ============================================================
+UPDATE ciclo_registro AS cr
+SET duracao_ciclo = sub.dias
+FROM (
+    SELECT
+        id,
+        LEAD(data_inicio) OVER (PARTITION BY usuario_id ORDER BY data_inicio ASC) AS proximo_inicio,
+        data_inicio,
+        (LEAD(data_inicio) OVER (PARTITION BY usuario_id ORDER BY data_inicio ASC) - data_inicio) AS dias
+    FROM ciclo_registro
+) AS sub
+WHERE cr.id = sub.id
+  AND sub.dias IS NOT NULL
+  AND sub.dias > 0;

@@ -31,14 +31,23 @@ namespace ApiSaudeFeminina.Application.Services
         {
             var registro = new CicloRegistro(dto.UsuarioId, dto.DataInicio, dto.DataFim, dto.Observacoes);
 
-            // Calcula duração do ciclo em relação ao registro anterior
+            // Busca o registro mais recente ANTES do novo (ordenado DESC, então é o primeiro)
             var anterior = await _repository.GetUltimoRegistroAsync(dto.UsuarioId);
-            if (anterior is not null)
+
+            if (anterior is not null && dto.DataInicio > anterior.DataInicio)
             {
-                var diasEntre = (dto.DataInicio - anterior.DataInicio).Days;
-                if (diasEntre > 0)
+                int diasEntre = (dto.DataInicio - anterior.DataInicio).Days;
+
+                // Salva a duração no registro anterior (intervalo entre o início dele e o início do novo)
+                if (diasEntre >= 1)
+                {
                     anterior.SetDuracaoCiclo(diasEntre);
-                _repository.Update(anterior);
+                    _repository.Update(anterior);
+                }
+
+                // Salva também no novo registro para que o cálculo de média funcione imediatamente
+                if (diasEntre >= 1)
+                    registro.SetDuracaoCiclo(diasEntre);
             }
 
             await _repository.AddAsync(registro);
